@@ -20,7 +20,6 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
-from App.model import avistamiento_ciudad
 import config as cf
 import sys
 import controller
@@ -99,7 +98,7 @@ while True:
         ciudad = input("Que ciudad desea consultar: ")
         avistamientos_ciudad = controller.avistamientos_ciudad(cont,ciudad)
         print("En la ciudad se dieron: ",lt.size(avistamientos_ciudad))
-        if lt.size(avistamiento_ciudad) > 4:
+        if lt.size(avistamientos_ciudad) > 4:
             print("Primeras 3")
             for posicion in range(3):
                 print("*******************************************"*3)
@@ -119,7 +118,7 @@ while True:
                 print("Duracion en segundos: ",avistamiento["duration (seconds)"])
         else:
             print("Sus avistamientos son: ")
-            for avistamiento in lt.iterator(avistamiento_ciudad):
+            for avistamiento in lt.iterator(avistamientos_ciudad):
                 print("*******************************************"*3)
                 print("Fecha: ",avistamiento["datetime"])
                 print("Ciudad y País: ",avistamiento["city"],", ",avistamiento["country"])
