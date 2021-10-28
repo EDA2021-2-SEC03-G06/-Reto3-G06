@@ -31,8 +31,40 @@ El controlador se encarga de mediar entre la vista y el modelo.
 
 # Inicialización del Catálogo de libros
 
-# Funciones para la carga de datos
+def init():
+    analyzer = model.newAnalyzer()
+    return analyzer
+
+
+#  Funciones para la carga de datos
+def loadData(analyzer, UFOfile):
+    UFOfile = cf.data_dir + UFOfile
+    input_file = csv.DictReader(open(UFOfile, encoding="utf-8"),
+                                delimiter=",")
+    for avistamiento in input_file:
+        model.addUFO(analyzer, avistamiento)
+    return analyzer
+
 
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
+
+def UFOSize(analyzer):
+    return model.UFOSize(analyzer)
+
+def indexHeight(analyzer):
+    """
+    Altura del indice (arbol)
+    """
+    return model.indexHeight(analyzer)
+
+
+def indexSize(analyzer):
+    """
+    Numero de nodos en el arbol
+    """
+    return model.indexSize(analyzer)
+
+def avistamientos_ciudad(analyser,ciudad):
+    return model.avistamiento_ciudad(analyser,ciudad)

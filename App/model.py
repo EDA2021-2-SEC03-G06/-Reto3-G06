@@ -28,8 +28,11 @@
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
+from DISClib.ADT import orderedmap as om
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import mergesort as ms
+import datetime
 assert cf
 
 """
@@ -38,13 +41,72 @@ los mismos.
 """
 
 # Construccion de modelos
+def newAnalyzer():
+    analyzer = {'avistamientos': lt.newList(datastructure='SINGLE_LINKED'),
+                'ciudad': om.newMap(omaptype='RBT')
+                }
+    return analyzer
+
 
 # Funciones para agregar informacion al catalogo
+
+
+def addUFO(analyzer, UFO):
+    lt.addLast(analyzer['avistamientos'], UFO)
+    updateCity(analyzer['ciudad'], UFO)
+    return analyzer
+
+
+def updateCity(map, UFO):
+    occurredcity = UFO['city']
+    entry = om.get(map,occurredcity)
+    if entry is None:
+        datentry = newDataEntry(UFO)
+        om.put(map, occurredcity, datentry)
+    else:
+        datentry = me.getValue(entry)
+    addCity(datentry, UFO)
+    return map
+
+
+def addCity(datentry, UFO):
+    lst = datentry['lstUFOS']
+    lt.addLast(lst, UFO)
+    return datentry
+
+
+def newDataEntry(UFO):
+    entry = {'lstUFOS': lt.newList('SINGLE_LINKED')}
+    return entry
 
 # Funciones para creacion de datos
 
 # Funciones de consulta
 
-# Funciones utilizadas para comparar elementos dentro de una lista
+def UFOSize(analyzer):
+    return lt.size(analyzer['avistamientos'])
 
+def indexHeight(analyzer):
+    return om.height(analyzer['ciudad'])
+
+
+def indexSize(analyzer):
+    return om.size(analyzer['ciudad'])
+
+def avistamiento_ciudad(analyser,ciudad):
+    lista = me.getValue(om.get(analyser["ciudad"],ciudad))
+    lista = lista["lstUFOS"]
+    lista_sorted = merge_sort(lista,lt.size(lista),cmpdatetime)
+    return lista_sorted
+
+# Funciones utilizadas para comparar elementos dentro de una lista
+def cmpdatetime(UFO1,UFO2):
+    orden = None
+    if (UFO1["datetime"]!="") and (UFO2["datetime"]!=""):
+        orden = (datetime.datetime.strptime(UFO1["datetime"],"%Y-%m-%d") > datetime.datetime.strptime(UFO2["datetime"],"%Y-%m-%d"))
+    return orden
 # Funciones de ordenamiento
+def merge_sort(catalogo,size,cmpfuncion):
+    sub_list = lt.subList(catalogo, 1, size)
+    sorted_list = ms.sort(sub_list,cmpfuncion)
+    return sorted_list
