@@ -93,7 +93,6 @@ def updateDate(map, UFO):
 
 def updateHour(map,UFO):
     hora_str = UFO["datetime"][11:]
-    print(hora_str)
     occurreddate = datetime.datetime.strptime(hora_str,"%H:%M:%S")
     entry = om.get(map,occurreddate)
     if entry is None:
@@ -143,7 +142,7 @@ def avistamientos_fecha(analyser,fecha_inicias,fecha_final):
     return avistamientos_sorted
 
 def avistamientos_hora(analyser,hora_inicio,hora_fin):
-    mas_tarde = "Aun por hallar, no olvides esto por favor"
+    mas_tarde = str(om.maxKey(analyser['hora']))[11:]
     avistamientos = lt.newList(datastructure="ARRAY_LIST")
     hora = hora_inicio
     while hora <= hora_fin:
