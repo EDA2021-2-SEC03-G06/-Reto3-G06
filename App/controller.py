@@ -69,6 +69,9 @@ def indexSize(analyzer):
 def avistamientos_ciudad(analyser,ciudad):
     return model.avistamiento_ciudad(analyser,ciudad)
 
+def avistamientos_segundos(analyser,s_min,s_max):
+    return model.avistamientos_segundos(analyser,s_min,s_max)
+
 def avistamientos_fecha(analyser, fecha_inicio, fecha_fin):
     fecha_inicias = fecha_inicio[:10]
     fecha_inicias = datetime.datetime.strptime(fecha_inicias,"%Y-%m-%d")

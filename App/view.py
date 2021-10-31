@@ -130,7 +130,11 @@ while True:
                 print("Forma: ",avistamiento["shape"])
                 print("Duracion en segundos: ",avistamiento["duration (seconds)"])
     elif int(inputs[0]) == 3:
-        print("En desarrollo (Individual)")
+        s_min = float(input("Ingrese el límite inferior en segundos: "))
+        s_max = float(input("Ingrese el límite superior en segundos: "))
+        mayor_cantidad,primeras_3,ultimas_3 = controller.avistamientos_segundos(cont,s_min,s_max)
+        print("Los avistamientos con la mayor duración fueron una cantidad de: "+str(mayor_cantidad))
+
     elif int(inputs[0]) == 4:
         hora_inicio = input("ingrese la hora inicias: ")
         hora_fin = input("ingrese la hora final: ")
@@ -163,6 +167,7 @@ while True:
                 print("Ciudad y País: ",avistamiento["city"],", ",avistamiento["country"])
                 print("Forma: ",avistamiento["shape"])
                 print("Duracion en segundos: ",avistamiento["duration (seconds)"])
+    
     elif int(inputs[0]) == 5:
         fecha_inicio = input("Ingrese la fecha inicial: ")
         fecha_fin = input("Ingrese la fecha final: ")
@@ -194,8 +199,10 @@ while True:
                 print("Ciudad y País: ",avistamiento["city"],", ",avistamiento["country"])
                 print("Forma: ",avistamiento["shape"])
                 print("Duracion en segundos: ",avistamiento["duration (seconds)"])
+    
     elif int(inputs[0]) == 6:
         print("En desarrollo")
+    
     elif int(inputs[0]) == 7:
         print("En desarrollo")
     else:
