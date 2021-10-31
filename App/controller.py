@@ -23,7 +23,7 @@
 import config as cf
 import model
 import csv
-
+import datetime
 
 """
 El controlador se encarga de mediar entre la vista y el modelo.
@@ -68,3 +68,10 @@ def indexSize(analyzer):
 
 def avistamientos_ciudad(analyser,ciudad):
     return model.avistamiento_ciudad(analyser,ciudad)
+
+def avistamientos_fecha(analyser, fecha_inicio, fecha_fin):
+    fecha_inicias = fecha_inicio[:10]
+    fecha_inicias = datetime.datetime.strptime(fecha_inicias,"%Y-%m-%d")
+    fecha_final = fecha_fin[:10]
+    fecha_final = datetime.datetime.strptime(fecha_final,"%Y-%m-%d")
+    return model.avistamientos_fecha(analyser,fecha_inicias,fecha_final)
