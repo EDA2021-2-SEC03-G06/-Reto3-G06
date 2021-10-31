@@ -140,13 +140,32 @@ while True:
         s_max = float(input("Ingrese el límite superior en segundos: "))
         mayor_cantidad,primeras_3,ultimas_3 = controller.avistamientos_segundos(cont,s_min,s_max)
         print("Los avistamientos con la mayor duración fueron una cantidad de: "+str(mayor_cantidad))
+        print("Primeras 3")
+        for posicion in range(1,4):
+            print("*******************************************"*3)
+            avistamiento = lt.getElement(primeras_3,posicion)
+            rta = [["Fecha: ",avistamiento["datetime"]],
+            ["Ciudad y País: ",(avistamiento["city"],", ",avistamiento["country"])],
+            ["Forma: ",avistamiento["shape"]],
+            ["Duracion en segundos: ",avistamiento["duration (seconds)"]]]
+            print(tabulate(rta,tablefmt='grid'))
+        print("*******************************************"*3)
+        print("Últimas 3")
+        for posicion in range(1,4):
+            print("*******************************************"*3)
+            avistamiento = lt.getElement(ultimas_3,posicion)
+            rta = [["Fecha: ",avistamiento["datetime"]],
+            ["Ciudad y País: ",(avistamiento["city"],", ",avistamiento["country"])],
+            ["Forma: ",avistamiento["shape"]],
+            ["Duracion en segundos: ",avistamiento["duration (seconds)"]]]
+            print(tabulate(rta,tablefmt='grid'))
 
     elif int(inputs[0]) == 4:
-        hora_inicio = input("ingrese la hora inicias: ")
+        hora_inicio = input("ingrese la hora inicial: ")
         hora_fin = input("ingrese la hora final: ")
         avistamientos, mas_tarde = controller.avistamientos_hora(cont,hora_inicio,hora_fin)
         print("El avistamiento mas tarde es a las: ",mas_tarde)
-        print("En ese rango de horas ubo: ",lt.size(avistamientos))
+        print("En ese rango de horas hubo: ",lt.size(avistamientos))
         if lt.size(avistamientos) > 4:
             print("Primeras 3")
             for posicion in range(1,4):
