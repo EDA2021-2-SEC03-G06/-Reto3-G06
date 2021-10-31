@@ -269,7 +269,9 @@ while True:
                 rta = [["Fecha: ",avistamiento["datetime"]],
                 ["Ciudad y País: ",(avistamiento["city"],", ",avistamiento["country"])],
                 ["Forma: ",avistamiento["shape"]],
-                ["Duracion en segundos: ",avistamiento["duration (seconds)"]]]
+                ["Duracion en segundos: ",avistamiento["duration (seconds)"]],
+                ["latitude", avistamiento["latitude"]],
+                ["longitud", avistamiento["longitude"]]]
                 print(tabulate(rta,tablefmt='grid'))
     
     elif int(inputs[0]) == 7:
