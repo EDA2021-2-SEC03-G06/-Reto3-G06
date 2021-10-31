@@ -225,9 +225,10 @@ def avistamientos_lugar(analyser,latitud_max,latitud_min,longitud_max,longitud_m
             avistamiento = me.getValue(avistamiento)
             avistamiento = avistamiento["lstUFOS"]
             for evento in lt.iterator(avistamiento):
-                if evento['longitude'] > longitud_min and evento['longitude'] < longitud_max:
+                if float(evento['longitude']) >= longitud_min and float(evento['longitude']) <= longitud_max:
                     lt.addLast(avistamientos,evento)
-        latitud += 0.1
+        latitud += 0.01
+        latitud = round(latitud,2)
     avistamientos_sorted = merge_sort(avistamientos,lt.size(avistamientos),cmpPlace)
     return avistamientos_sorted
 
