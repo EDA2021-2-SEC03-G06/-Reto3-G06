@@ -46,7 +46,8 @@ def newAnalyzer():
     analyzer = {'avistamientos': lt.newList(datastructure='SINGLE_LINKED'),
                 'ciudad': om.newMap(omaptype='RBT'),
                 'fecha' : om.newMap(omaptype='RBT'),
-                'hora' : om.newMap(omaptype="RBT")
+                'hora' : om.newMap(omaptype="RBT"),
+                'lugar' : om.newMap(omaptype="RBT")
                 }
     return analyzer
 
@@ -59,6 +60,7 @@ def addUFO(analyzer, UFO):
     updateCity(analyzer['ciudad'], UFO)
     updateDate(analyzer['fecha'],UFO)
     updateHour(analyzer['hora'],UFO)
+    updateLatitude(analyzer['lugar'],UFO)
     return analyzer
 
 
@@ -98,6 +100,17 @@ def updateHour(map,UFO):
     if entry is None:
         datentry = newDataEntry(UFO)
         om.put(map, occurreddate, datentry)
+    else:
+        datentry = me.getValue(entry)
+    addCity(datentry, UFO)
+    return map
+
+def updateLatitude(map,UFO):
+    latitude = round(float(UFO["latitude"]),2)
+    entry = om.get(map,latitude)
+    if entry is None:
+        datentry = newDataEntry(UFO)
+        om.put(map, latitude, datentry)
     else:
         datentry = me.getValue(entry)
     addCity(datentry, UFO)
@@ -156,6 +169,21 @@ def avistamientos_hora(analyser,hora_inicio,hora_fin):
     avistamientos_sorted = merge_sort(avistamientos,lt.size(avistamientos),cmptime)
     return avistamientos_sorted, mas_tarde
 
+def avistamientos_lugar(analyser,latitud_max,latitud_min,longitud_max,longitud_min):
+    latitud = latitud_min
+    avistamientos = lt.newList(datastructure='ARRAY_LIST')
+    while latitud <= latitud_max:
+        avistamiento = om.get(analyser['lugar'],latitud)
+        if avistamiento != None:
+            avistamiento = me.getValue(avistamiento)
+            avistamiento = avistamiento["lstUFOS"]
+            for evento in lt.iterator(avistamiento):
+                if evento['longitude'] > longitud_min and evento['longitude'] < longitud_max:
+                    lt.addLast(avistamientos,evento)
+        latitud += 0.1
+    avistamientos_sorted = merge_sort(avistamientos,lt.size(avistamientos),cmpPlace)
+    return avistamientos_sorted
+
 # Funciones utilizadas para comparar elementos dentro de una lista
 def cmpdatetime(UFO1,UFO2):
     orden = None
@@ -169,6 +197,17 @@ def cmptime(UFO1,UFO2):
         if (datetime.datetime.strptime(UFO1["datetime"][11:],"%H:%M:%S") > datetime.datetime.strptime(UFO2["datetime"][11:],"%H:%M:%S")):
             orden = True
         elif (datetime.datetime.strptime(UFO1["datetime"][11:],"%H:%M:%S") == datetime.datetime.strptime(UFO2["datetime"][11:],"%H:%M:%S")) and (datetime.datetime.strptime(UFO1["datetime"][:10],"%Y-%m-%d") > datetime.datetime.strptime(UFO2["datetime"][:10],"%Y-%m-%d")):
+            orden = True
+        else:
+            orden = False
+    return orden
+
+def cmpPlace(UFO1,UFO2):
+    orden = None
+    if (UFO1["latitude"]!="") and (UFO2["latitude"]!=""):
+        if round(float(UFO1['latitude']),2) > round(float(UFO2['latitude']),2):
+            orden = True
+        elif round(float(UFO1['latitude']),2) == round(float(UFO2['latitude']),2) and round(float(UFO1['longitude']),2) > round(float(UFO2['longitude']),2):
             orden = True
         else:
             orden = False
