@@ -51,7 +51,7 @@ else:
 
 
 try:
-    import wcwidth  # optional wide-character (CJK) support
+    import  wcwidth # optional wide-character (CJK) support
 except ImportError:
     wcwidth = None
 

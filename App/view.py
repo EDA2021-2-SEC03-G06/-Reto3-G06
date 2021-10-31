@@ -232,7 +232,45 @@ while True:
                 print(tabulate(rta,tablefmt='grid'))
     
     elif int(inputs[0]) == 6:
-        print("En desarrollo")
+        longitud_max = round(float(input("Ingrese la longitud superio: ")),2)
+        longitud_min = round(float(input("Ingrese la longitud inferior: ")),2)
+        latitud_max = round(float(input("Ingrese la latitud superio: ")),2)
+        latitud_min = round(float(input("Ingrese la latitud inferior: ")),2)
+        avistamientos = controller.avistamientos_lugar(cont,latitud_max,latitud_min,longitud_max,longitud_min)
+        print("En ese rango de area ubo: ",lt.size(avistamientos))
+        if lt.size(avistamientos) > 6:
+            print("Primeras 3")
+            for posicion in range(1,6):
+                print("*******************************************"*3)
+                avistamiento = lt.getElement(avistamientos,posicion)
+                rta = [["Fecha: ",avistamiento["datetime"]],
+                ["Ciudad y País: ",(avistamiento["city"],", ",avistamiento["country"])],
+                ["Forma: ",avistamiento["shape"]],
+                ["Duracion en segundos: ",avistamiento["duration (seconds)"]],
+                ["latitude", avistamiento["latitude"]],
+                ["longitud", avistamiento["longitude"]]]
+                print(tabulate(rta,tablefmt='grid'))
+            print("*******************************************"*3)
+            print("Últimas 3")
+            for posicion in range(lt.size(avistamientos)-4,lt.size(avistamientos)+1):
+                print("*******************************************"*3)
+                avistamiento = lt.getElement(avistamientos,posicion)
+                rta = [["Fecha: ",avistamiento["datetime"]],
+                ["Ciudad y País: ",(avistamiento["city"],", ",avistamiento["country"])],
+                ["Forma: ",avistamiento["shape"]],
+                ["Duracion en segundos: ",avistamiento["duration (seconds)"]],
+                ["latitude", avistamiento["latitude"]],
+                ["longitud", avistamiento["longitude"]]]
+                print(tabulate(rta,tablefmt='grid'))
+        else:
+            print("Sus avistamientos son: ")
+            for avistamiento in lt.iterator(avistamientos):
+                print("*******************************************"*3)
+                rta = [["Fecha: ",avistamiento["datetime"]],
+                ["Ciudad y País: ",(avistamiento["city"],", ",avistamiento["country"])],
+                ["Forma: ",avistamiento["shape"]],
+                ["Duracion en segundos: ",avistamiento["duration (seconds)"]]]
+                print(tabulate(rta,tablefmt='grid'))
     
     elif int(inputs[0]) == 7:
         print("En desarrollo")

@@ -83,3 +83,6 @@ def avistamientos_hora(analyser, hora_inicio, hora_fin):
     hora_i = datetime.datetime.strptime(hora_inicio,"%H:%M")
     hora_f = datetime.datetime.strptime(hora_fin,"%H:%M")
     return  model.avistamientos_hora(analyser,hora_i,hora_f)
+
+def avistamientos_lugar(analyser,latitud_max,latitud_min,longitud_max,longitud_min):
+    return model.avistamientos_lugar(analyser,latitud_max,latitud_min,longitud_max,longitud_min)
