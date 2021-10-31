@@ -46,7 +46,7 @@ def newAnalyzer():
     analyzer = {'avistamientos': lt.newList(datastructure='SINGLE_LINKED'),
                 'ciudad': om.newMap(omaptype='RBT'),
                 'fecha' : om.newMap(omaptype='RBT'),
-                'Hora' : om.newMap(omaptype="RBT")
+                'hora' : om.newMap(omaptype="RBT")
                 }
     return analyzer
 
@@ -58,6 +58,7 @@ def addUFO(analyzer, UFO):
     lt.addLast(analyzer['avistamientos'], UFO)
     updateCity(analyzer['ciudad'], UFO)
     updateDate(analyzer['fecha'],UFO)
+    updateHour(analyzer['hora'],UFO)
     return analyzer
 
 
@@ -91,7 +92,7 @@ def updateDate(map, UFO):
     return map
 
 def updateHour(map,UFO):
-    hora_str = UFO["datetime"][12:]
+    hora_str = UFO["datetime"][11:]
     print(hora_str)
     occurreddate = datetime.datetime.strptime(hora_str,"%H:%M:%S")
     entry = om.get(map,occurreddate)
@@ -144,7 +145,17 @@ def avistamientos_fecha(analyser,fecha_inicias,fecha_final):
 def avistamientos_hora(analyser,hora_inicio,hora_fin):
     mas_tarde = "Aun por hallar, no olvides esto por favor"
     avistamientos = lt.newList(datastructure="ARRAY_LIST")
-
+    hora = hora_inicio
+    while hora <= hora_fin:
+        avistamiento = om.get(analyser["hora"],hora)
+        if avistamiento != None:
+            avistamiento = me.getValue(avistamiento)
+            avistamiento = avistamiento["lstUFOS"]
+            for evento in lt.iterator(avistamiento):
+                lt.addLast(avistamientos,evento)
+        hora += datetime.timedelta(minutes = 1)
+    avistamientos_sorted = merge_sort(avistamientos,lt.size(avistamientos),cmptime)
+    return avistamientos_sorted, mas_tarde
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 def cmpdatetime(UFO1,UFO2):
@@ -152,6 +163,18 @@ def cmpdatetime(UFO1,UFO2):
     if (UFO1["datetime"]!="") and (UFO2["datetime"]!=""):
         orden = (datetime.datetime.strptime(UFO1["datetime"],"%Y-%m-%d %H:%M:%S") > datetime.datetime.strptime(UFO2["datetime"],"%Y-%m-%d %H:%M:%S"))
     return orden
+
+def cmptime(UFO1,UFO2):
+    orden = None
+    if (UFO1["datetime"]!="") and (UFO2["datetime"]!=""):
+        if (datetime.datetime.strptime(UFO1["datetime"][11:],"%H:%M:%S") > datetime.datetime.strptime(UFO2["datetime"][11:],"%H:%M:%S")):
+            orden = True
+        elif (datetime.datetime.strptime(UFO1["datetime"][11:],"%H:%M:%S") == datetime.datetime.strptime(UFO2["datetime"][11:],"%H:%M:%S")) and (datetime.datetime.strptime(UFO1["datetime"][:10],"%Y-%m-%d") > datetime.datetime.strptime(UFO2["datetime"][:10],"%Y-%m-%d")):
+            orden = True
+        else:
+            orden = False
+    return orden
+
 
 # Funciones de ordenamiento
 def merge_sort(catalogo,size,cmpfuncion):

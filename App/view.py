@@ -132,7 +132,37 @@ while True:
     elif int(inputs[0]) == 3:
         print("En desarrollo (Individual)")
     elif int(inputs[0]) == 4:
-        print("En desarrollo (Individual)")
+        hora_inicio = input("ingrese la hora inicias: ")
+        hora_fin = input("ingrese la hora final: ")
+        avistamientos, mas_tarde = controller.avistamientos_hora(cont,hora_inicio,hora_fin)
+        print("El avistamiento mas tarde es a las: ",mas_tarde)
+        print("En ese rango de horas ubo: ",lt.size(avistamientos))
+        if lt.size(avistamientos) > 4:
+            print("Primeras 3")
+            for posicion in range(1,4):
+                print("*******************************************"*3)
+                avistamiento = lt.getElement(avistamientos,posicion)
+                print("Fecha: ",avistamiento["datetime"])
+                print("Ciudad y País: ",avistamiento["city"],", ",avistamiento["country"])
+                print("Forma: ",avistamiento["shape"])
+                print("Duracion en segundos: ",avistamiento["duration (seconds)"])
+            print("*******************************************"*3)
+            print("Últimas 3")
+            for posicion in range(lt.size(avistamientos)-2,lt.size(avistamientos)+1):
+                print("*******************************************"*3)
+                avistamiento = lt.getElement(avistamientos,posicion)
+                print("Fecha: ",avistamiento["datetime"])
+                print("Ciudad y País: ",avistamiento["city"],", ",avistamiento["country"])
+                print("Forma: ",avistamiento["shape"])
+                print("Duracion en segundos: ",avistamiento["duration (seconds)"])
+        else:
+            print("Sus avistamientos son: ")
+            for avistamiento in lt.iterator(avistamientos):
+                print("*******************************************"*3)
+                print("Fecha: ",avistamiento["datetime"])
+                print("Ciudad y País: ",avistamiento["city"],", ",avistamiento["country"])
+                print("Forma: ",avistamiento["shape"])
+                print("Duracion en segundos: ",avistamiento["duration (seconds)"])
     elif int(inputs[0]) == 5:
         fecha_inicio = input("Ingrese la fecha inicial: ")
         fecha_fin = input("Ingrese la fecha final: ")

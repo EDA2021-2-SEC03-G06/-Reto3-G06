@@ -75,3 +75,8 @@ def avistamientos_fecha(analyser, fecha_inicio, fecha_fin):
     fecha_final = fecha_fin[:10]
     fecha_final = datetime.datetime.strptime(fecha_final,"%Y-%m-%d")
     return model.avistamientos_fecha(analyser,fecha_inicias,fecha_final)
+
+def avistamientos_hora(analyser, hora_inicio, hora_fin):
+    hora_i = datetime.datetime.strptime(hora_inicio,"%H:%M")
+    hora_f = datetime.datetime.strptime(hora_fin,"%H:%M")
+    return  model.avistamientos_hora(analyser,hora_i,hora_f)
