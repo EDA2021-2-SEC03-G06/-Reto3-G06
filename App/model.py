@@ -25,6 +25,7 @@
  """
 
 
+from App.controller import avistamientos_ciudad
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
@@ -43,7 +44,9 @@ los mismos.
 # Construccion de modelos
 def newAnalyzer():
     analyzer = {'avistamientos': lt.newList(datastructure='SINGLE_LINKED'),
-                'ciudad': om.newMap(omaptype='RBT')
+                'ciudad': om.newMap(omaptype='RBT'),
+                'fecha' : om.newMap(omaptype='RBT'),
+                'Hora' : om.newMap(omaptype="RBT")
                 }
     return analyzer
 
@@ -54,6 +57,7 @@ def newAnalyzer():
 def addUFO(analyzer, UFO):
     lt.addLast(analyzer['avistamientos'], UFO)
     updateCity(analyzer['ciudad'], UFO)
+    updateDate(analyzer['fecha'],UFO)
     return analyzer
 
 
@@ -74,6 +78,30 @@ def addCity(datentry, UFO):
     lt.addLast(lst, UFO)
     return datentry
 
+def updateDate(map, UFO):
+    fecha_str = UFO["datetime"][:10]
+    occurreddate = datetime.datetime.strptime(fecha_str,"%Y-%m-%d")
+    entry = om.get(map,occurreddate)
+    if entry is None:
+        datentry = newDataEntry(UFO)
+        om.put(map, occurreddate, datentry)
+    else:
+        datentry = me.getValue(entry)
+    addCity(datentry, UFO)
+    return map
+
+def updateHour(map,UFO):
+    hora_str = UFO["datetime"][12:]
+    print(hora_str)
+    occurreddate = datetime.datetime.strptime(hora_str,"%H:%M:%S")
+    entry = om.get(map,occurreddate)
+    if entry is None:
+        datentry = newDataEntry(UFO)
+        om.put(map, occurreddate, datentry)
+    else:
+        datentry = me.getValue(entry)
+    addCity(datentry, UFO)
+    return map
 
 def newDataEntry(UFO):
     entry = {'lstUFOS': lt.newList('SINGLE_LINKED')}
@@ -99,12 +127,32 @@ def avistamiento_ciudad(analyser,ciudad):
     lista_sorted = merge_sort(lista,lt.size(lista),cmpdatetime)
     return lista_sorted
 
+def avistamientos_fecha(analyser,fecha_inicias,fecha_final):
+    fecha = fecha_inicias
+    avistamientos = lt.newList(datastructure="ARRAY_LIST")
+    while fecha <= fecha_final:
+        avistamiento = om.get(analyser["fecha"],fecha)
+        if avistamiento != None:
+            avistamiento = me.getValue(avistamiento)
+            avistamiento = avistamiento["lstUFOS"]
+            for evento in lt.iterator(avistamiento):
+                lt.addLast(avistamientos,evento)
+        fecha += datetime.timedelta(1,0,0)
+    avistamientos_sorted = merge_sort(avistamientos,lt.size(avistamientos),cmpdatetime)
+    return avistamientos_sorted
+
+def avistamientos_hora(analyser,hora_inicio,hora_fin):
+    mas_tarde = "Aun por hallar, no olvides esto por favor"
+    avistamientos = lt.newList(datastructure="ARRAY_LIST")
+
+
 # Funciones utilizadas para comparar elementos dentro de una lista
 def cmpdatetime(UFO1,UFO2):
     orden = None
     if (UFO1["datetime"]!="") and (UFO2["datetime"]!=""):
-        orden = (datetime.datetime.strptime(UFO1["datetime"],"%Y-%m-%d") > datetime.datetime.strptime(UFO2["datetime"],"%Y-%m-%d"))
+        orden = (datetime.datetime.strptime(UFO1["datetime"],"%Y-%m-%d %H:%M:%S") > datetime.datetime.strptime(UFO2["datetime"],"%Y-%m-%d %H:%M:%S"))
     return orden
+
 # Funciones de ordenamiento
 def merge_sort(catalogo,size,cmpfuncion):
     sub_list = lt.subList(catalogo, 1, size)

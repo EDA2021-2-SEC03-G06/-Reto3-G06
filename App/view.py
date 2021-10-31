@@ -47,6 +47,11 @@ def printMenu():
     print("Bienvenido")
     print("1- Cargar información de UFOS")
     print("2- Total de avistamientos en una ciudad")
+    print("3- Contar Avistamientos por duracion")
+    print("4- Contar Avistamientos por Hora/Minuto")
+    print("5- Contar los Avistamientos en un rango de fechas")
+    print("6- Contar los avistamientos de una zona geografica")
+    print("7- Visualizar los avistamientos de una zona geografica")
     print("0- Salir")
     print("*******************************************"*3)
 
@@ -61,7 +66,7 @@ while True:
         cont = controller.init()
         controller.loadData(cont, UFOfile)
         print('Total de avistamientos: ' + str(controller.UFOSize(cont)))
-        print("Primeras 5")
+        print("Ultimas 5")
         for posicion in range(5):
             print("*******************************************"*3)
             avistamiento = lt.getElement(cont["avistamientos"],posicion)
@@ -77,7 +82,7 @@ while True:
             print("Latitud: ",avistamiento["latitude"])
             print("Longitud: ",avistamiento["longitude"])
         print("*******************************************"*3)
-        print("Últimas 5")
+        print("Primeras 5")
         for posicion in range(lt.size(cont["avistamientos"])-4,lt.size(cont["avistamientos"])+1):
             print("*******************************************"*3)
             avistamiento = lt.getElement(cont["avistamientos"],posicion)
@@ -100,7 +105,7 @@ while True:
         print("En la ciudad se dieron: ",lt.size(avistamientos_ciudad))
         if lt.size(avistamientos_ciudad) > 4:
             print("Primeras 3")
-            for posicion in range(3):
+            for posicion in range(1,4):
                 print("*******************************************"*3)
                 avistamiento = lt.getElement(avistamientos_ciudad,posicion)
                 print("Fecha: ",avistamiento["datetime"])
@@ -124,6 +129,45 @@ while True:
                 print("Ciudad y País: ",avistamiento["city"],", ",avistamiento["country"])
                 print("Forma: ",avistamiento["shape"])
                 print("Duracion en segundos: ",avistamiento["duration (seconds)"])
+    elif int(inputs[0]) == 3:
+        print("En desarrollo (Individual)")
+    elif int(inputs[0]) == 4:
+        print("En desarrollo (Individual)")
+    elif int(inputs[0]) == 5:
+        fecha_inicio = input("Ingrese la fecha inicial: ")
+        fecha_fin = input("Ingrese la fecha final: ")
+        avistamientos_fecha = controller.avistamientos_fecha(cont,fecha_inicio,fecha_fin)
+        print("En esas fecha ubo: ",lt.size(avistamientos_fecha)," avistamientos")
+        if lt.size(avistamientos_fecha) > 4:
+            print("Primeras 3")
+            for posicion in range(1,4):
+                print("*******************************************"*3)
+                avistamiento = lt.getElement(avistamientos_fecha,posicion)
+                print("Fecha: ",avistamiento["datetime"])
+                print("Ciudad y País: ",avistamiento["city"],", ",avistamiento["country"])
+                print("Forma: ",avistamiento["shape"])
+                print("Duracion en segundos: ",avistamiento["duration (seconds)"])
+            print("*******************************************"*3)
+            print("Últimas 3")
+            for posicion in range(lt.size(avistamientos_fecha)-2,lt.size(avistamientos_fecha)+1):
+                print("*******************************************"*3)
+                avistamiento = lt.getElement(avistamientos_fecha,posicion)
+                print("Fecha: ",avistamiento["datetime"])
+                print("Ciudad y País: ",avistamiento["city"],", ",avistamiento["country"])
+                print("Forma: ",avistamiento["shape"])
+                print("Duracion en segundos: ",avistamiento["duration (seconds)"])
+        else:
+            print("Sus avistamientos son: ")
+            for avistamiento in lt.iterator(avistamientos_fecha):
+                print("*******************************************"*3)
+                print("Fecha: ",avistamiento["datetime"])
+                print("Ciudad y País: ",avistamiento["city"],", ",avistamiento["country"])
+                print("Forma: ",avistamiento["shape"])
+                print("Duracion en segundos: ",avistamiento["duration (seconds)"])
+    elif int(inputs[0]) == 6:
+        print("En desarrollo")
+    elif int(inputs[0]) == 7:
+        print("En desarrollo")
     else:
         sys.exit(0)
 sys.exit(0)
