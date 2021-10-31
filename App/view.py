@@ -232,12 +232,12 @@ while True:
                 print(tabulate(rta,tablefmt='grid'))
     
     elif int(inputs[0]) == 6:
-        longitud_max = round(float(input("Ingrese la longitud superio: ")),2)
+        longitud_max = round(float(input("Ingrese la longitud superior: ")),2)
         longitud_min = round(float(input("Ingrese la longitud inferior: ")),2)
-        latitud_max = round(float(input("Ingrese la latitud superio: ")),2)
+        latitud_max = round(float(input("Ingrese la latitud superior: ")),2)
         latitud_min = round(float(input("Ingrese la latitud inferior: ")),2)
         avistamientos = controller.avistamientos_lugar(cont,latitud_max,latitud_min,longitud_max,longitud_min)
-        print("En ese rango de area ubo: ",lt.size(avistamientos))
+        print("En ese rango de área hubo: ",lt.size(avistamientos))
         if lt.size(avistamientos) > 6:
             print("Primeras 3")
             for posicion in range(1,6):
