@@ -46,8 +46,9 @@ def newAnalyzer():
     analyzer = {'avistamientos': lt.newList(datastructure='SINGLE_LINKED'),
                 'ciudad': om.newMap(omaptype='RBT'),
                 'fecha' : om.newMap(omaptype='RBT'),
-                'hora' : om.newMap(omaptype="RBT"),
-                'lugar' : om.newMap(omaptype="RBT")
+                'lugar' : om.newMap(omaptype="RBT"),
+                'segundos' : om.newMap(omaptype="RBT"),
+                'hora' : om.newMap(omaptype='RBT')
                 }
     return analyzer
 
@@ -59,6 +60,7 @@ def addUFO(analyzer, UFO):
     lt.addLast(analyzer['avistamientos'], UFO)
     updateCity(analyzer['ciudad'], UFO)
     updateDate(analyzer['fecha'],UFO)
+    updateSeconds(analyzer['segundos'],UFO)
     updateHour(analyzer['hora'],UFO)
     updateLatitude(analyzer['lugar'],UFO)
     return analyzer
@@ -84,6 +86,18 @@ def addCity(datentry, UFO):
 def updateDate(map, UFO):
     fecha_str = UFO["datetime"][:10]
     occurreddate = datetime.datetime.strptime(fecha_str,"%Y-%m-%d")
+    entry = om.get(map,occurreddate)
+    if entry is None:
+        datentry = newDataEntry(UFO)
+        om.put(map, occurreddate, datentry)
+    else:
+        datentry = me.getValue(entry)
+    addCity(datentry, UFO)
+    return map
+
+def updateSeconds(map,UFO):
+    segundos_str = UFO["duration (seconds)"]
+    occurreddate = float(segundos_str)
     entry = om.get(map,occurreddate)
     if entry is None:
         datentry = newDataEntry(UFO)
@@ -140,6 +154,39 @@ def avistamiento_ciudad(analyser,ciudad):
     lista_sorted = merge_sort(lista,lt.size(lista),cmpdatetime)
     return lista_sorted
 
+def avistamientos_segundos(analyser,s_min,s_max):
+    """
+    Primera parte del Req-2
+    """
+    high_key = om.maxKey(analyser['segundos'])
+    tupla = om.get(analyser["segundos"],high_key)
+    mayores = tupla["value"]["lstUFOS"]
+    mayor_cantidad = lt.size(mayores)
+
+    """
+    Segunda parte del req-2
+    """
+    avistamientos = lt.newList(datastructure="ARRAY_LIST")
+    s_inicio = s_min
+    while s_inicio <= s_max:
+        ufos = om.get(analyser['segundos'],str(s_inicio)) 
+        if ufos != None:
+            ufos = me.getValue(ufos)
+            ufos = ufos["lstUFOS"]
+            for avistamiento in lt.iterator(ufos):
+                lt.addLast(avistamientos,avistamiento)
+        s_inicio += 1
+    
+    primeras_3 = lt.newList(datastructure="ARRAY_LIST")
+    for posicion in range(4):
+        lt.addLast(primeras_3,lt.getElement(avistamientos,posicion))
+    ultimas_3 = lt.newList(datastructure="ARRAY_LIST")
+    for posicion in range(lt.size(avistamientos)-3,lt.size(avistamientos)):
+        lt.addLast(ultimas_3,lt.getElement(avistamientos,posicion))
+    
+    
+    return mayor_cantidad,primeras_3,ultimas_3
+
 def avistamientos_fecha(analyser,fecha_inicias,fecha_final):
     fecha = fecha_inicias
     avistamientos = lt.newList(datastructure="ARRAY_LIST")
@@ -189,6 +236,20 @@ def cmpdatetime(UFO1,UFO2):
     orden = None
     if (UFO1["datetime"]!="") and (UFO2["datetime"]!=""):
         orden = (datetime.datetime.strptime(UFO1["datetime"],"%Y-%m-%d %H:%M:%S") > datetime.datetime.strptime(UFO2["datetime"],"%Y-%m-%d %H:%M:%S"))
+    return orden
+
+def cmp_req2(UFO1,UFO2):
+    orden = None
+    if (UFO1["duration (seconds)"]!="") and (UFO2["duration (seconds)"]!=""):
+        if UFO1["duration (seconds)"] == UFO2["duration (seconds)"]:
+            if (UFO1["country"]!="") and (UFO2["country"]!=""):
+                if UFO1["country"] == UFO2["country"]:
+                    if (UFO1["city"]!="") and (UFO2["city"]!=""):
+                        orden = UFO1["city"] > UFO2["city"]
+                else:
+                    orden = UFO1["country"] > UFO2["country"]
+        else:
+            orden = UFO1["duration (seconds)"] > UFO2["duration (seconds)"]
     return orden
 
 def cmptime(UFO1,UFO2):
