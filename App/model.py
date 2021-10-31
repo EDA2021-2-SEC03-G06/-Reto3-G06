@@ -25,7 +25,6 @@
  """
 
 
-from App.controller import avistamientos_ciudad
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
@@ -34,6 +33,7 @@ from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Sorting import mergesort as ms
 import datetime
+import folium
 assert cf
 
 """
@@ -169,13 +169,13 @@ def avistamientos_segundos(analyser,s_min,s_max):
     avistamientos = lt.newList(datastructure="ARRAY_LIST")
     s_inicio = s_min
     while s_inicio <= s_max:
-        ufos = om.get(analyser['segundos'],str(s_inicio)) 
+        ufos = om.get(analyser['segundos'],s_inicio) 
         if ufos != None:
             ufos = me.getValue(ufos)
             ufos = ufos["lstUFOS"]
             for avistamiento in lt.iterator(ufos):
                 lt.addLast(avistamientos,avistamiento)
-        s_inicio += 1
+        s_inicio += 0.5
     
     primeras_3 = lt.newList(datastructure="ARRAY_LIST")
     for posicion in range(4):
