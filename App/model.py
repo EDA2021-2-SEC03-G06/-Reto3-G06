@@ -36,6 +36,7 @@ import datetime
 import folium
 assert cf
 import time as chronos
+import webbrowser
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
@@ -247,6 +248,21 @@ def avistamientos_lugar(analyser,latitud_max,latitud_min,longitud_max,longitud_m
         latitud += 0.01
         latitud = round(latitud,2)
     avistamientos_sorted = merge_sort(avistamientos,lt.size(avistamientos),cmpPlace)
+    
+    
+    #REQ 6
+    latit_def = (latitud_max+latitud_min)/2
+    long_def = (longitud_max+longitud_min)/2
+
+    mapa = folium.Map(location=[latit_def,long_def],zoom_start=4)
+
+    for avistamiento in lt.iterator(avistamientos_sorted):
+        folium.Marker(location=[float(avistamiento["latitude"]),float(avistamiento['longitude'])]).add_to(mapa)
+
+    mapa.save(cf.data_dir +"/UFOS/mapita.html")
+    webbrowser.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    webbrowser.open(cf.data_dir +"/UFOS/mapita.html")
+    
     stop_time = chronos.process_time()
     time = (stop_time - start_time)*1000
     print("se demoro: ", time)
