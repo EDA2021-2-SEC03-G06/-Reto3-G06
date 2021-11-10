@@ -35,6 +35,7 @@ from DISClib.Algorithms.Sorting import mergesort as ms
 import datetime
 import folium
 assert cf
+import time as chronos
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
@@ -149,15 +150,20 @@ def indexSize(analyzer):
     return om.size(analyzer['ciudad'])
 
 def avistamiento_ciudad(analyser,ciudad):
+    start_time = chronos.process_time()
     lista = me.getValue(om.get(analyser["ciudad"],ciudad))
     lista = lista["lstUFOS"]
     lista_sorted = merge_sort(lista,lt.size(lista),cmpdatetime)
+    stop_time = chronos.process_time()
+    time = (stop_time - start_time)*1000
+    print("se demoro: ", time)
     return lista_sorted
 
 def avistamientos_segundos(analyser,s_min,s_max):
     """
     Primera parte del Req-2
     """
+    start_time = chronos.process_time()
     high_key = om.maxKey(analyser['segundos'])
     tupla = om.get(analyser["segundos"],high_key)
     mayores = tupla["value"]["lstUFOS"]
@@ -184,10 +190,13 @@ def avistamientos_segundos(analyser,s_min,s_max):
     for posicion in range(lt.size(avistamientos)-3,lt.size(avistamientos)):
         lt.addLast(ultimas_3,lt.getElement(avistamientos,posicion))
     
-    
+    stop_time = chronos.process_time()
+    time = (stop_time - start_time)*1000
+    print("se demoro: ", time)
     return mayor_cantidad,primeras_3,ultimas_3
 
 def avistamientos_fecha(analyser,fecha_inicias,fecha_final):
+    start_time = chronos.process_time()
     fecha = fecha_inicias
     avistamientos = lt.newList(datastructure="ARRAY_LIST")
     while fecha <= fecha_final:
@@ -199,9 +208,13 @@ def avistamientos_fecha(analyser,fecha_inicias,fecha_final):
                 lt.addLast(avistamientos,evento)
         fecha += datetime.timedelta(1,0,0)
     avistamientos_sorted = merge_sort(avistamientos,lt.size(avistamientos),cmpdatetime)
+    stop_time = chronos.process_time()
+    time = (stop_time - start_time)*1000
+    print("se demoro: ", time)
     return avistamientos_sorted
 
 def avistamientos_hora(analyser,hora_inicio,hora_fin):
+    start_time = chronos.process_time()
     mas_tarde = str(om.maxKey(analyser['hora']))[11:]
     avistamientos = lt.newList(datastructure="ARRAY_LIST")
     hora = hora_inicio
@@ -214,9 +227,13 @@ def avistamientos_hora(analyser,hora_inicio,hora_fin):
                 lt.addLast(avistamientos,evento)
         hora += datetime.timedelta(minutes = 1)
     avistamientos_sorted = merge_sort(avistamientos,lt.size(avistamientos),cmptime)
+    stop_time = chronos.process_time()
+    time = (stop_time - start_time)*1000
+    print("se demoro: ", time)
     return avistamientos_sorted, mas_tarde
 
 def avistamientos_lugar(analyser,latitud_max,latitud_min,longitud_max,longitud_min):
+    start_time = chronos.process_time()
     latitud = latitud_min
     avistamientos = lt.newList(datastructure='ARRAY_LIST')
     while latitud <= latitud_max:
@@ -230,6 +247,9 @@ def avistamientos_lugar(analyser,latitud_max,latitud_min,longitud_max,longitud_m
         latitud += 0.01
         latitud = round(latitud,2)
     avistamientos_sorted = merge_sort(avistamientos,lt.size(avistamientos),cmpPlace)
+    stop_time = chronos.process_time()
+    time = (stop_time - start_time)*1000
+    print("se demoro: ", time)
     return avistamientos_sorted
 
 # Funciones utilizadas para comparar elementos dentro de una lista

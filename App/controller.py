@@ -24,6 +24,7 @@ import config as cf
 import model
 import csv
 import datetime
+import time as chronos
 
 """
 El controlador se encarga de mediar entre la vista y el modelo.
@@ -38,11 +39,15 @@ def init():
 
 #  Funciones para la carga de datos
 def loadData(analyzer, UFOfile):
+    start_time = chronos.process_time()
     UFOfile = cf.data_dir + UFOfile
     input_file = csv.DictReader(open(UFOfile, encoding="utf-8"),
                                 delimiter=",")
     for avistamiento in input_file:
         model.addUFO(analyzer, avistamiento)
+    stop_time = chronos.process_time()
+    time = (stop_time - start_time)*1000
+    print("se demoro: ", time)
     return analyzer
 
 

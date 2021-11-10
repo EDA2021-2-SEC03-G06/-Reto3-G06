@@ -35,7 +35,7 @@ se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
 
-UFOfile = '/UFOS/UFOS-utf8-small.csv'
+UFOfile = '/UFOS/UFOS-utf8-large.csv'
 cont = None
 # ___________________________________________________
 #  Menu principal
@@ -273,9 +273,6 @@ while True:
                 ["latitude", avistamiento["latitude"]],
                 ["longitud", avistamiento["longitude"]]]
                 print(tabulate(rta,tablefmt='grid'))
-    
-    elif int(inputs[0]) == 7:
-        print("En desarrollo")
     else:
         sys.exit(0)
 sys.exit(0)
